@@ -1,6 +1,6 @@
 <template>
   <div class="h-dvh">
-    <NuxtLayout class="h-full">
+    <NuxtLayout class="h-dvh">
       <NuxtPage />
     </NuxtLayout>
     <UNotifications />

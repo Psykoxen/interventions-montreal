@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="w-full flex flex-col h-full">
+    <div class="w-full flex flex-col h-dvh">
       <div class="w-full flex items-center flex-row justify-between">
         <div class="flex flex-row gap-2 p-3 items-center">
           <img
@@ -22,7 +22,7 @@
           @click="isDark = !isDark"
         />
       </div>
-      <div class="flex flex-row h-full">
+      <div class="flex flex-row h-dvh">
         <div class="flex flex-col items-center w-14 gap-1">
           <UButton
             icon="i-heroicons-globe-asia-australia-solid"
@@ -53,7 +53,7 @@
           />
         </div>
         <div
-          class="rounded-tl-2xl bg-gray-light dark:bg-gray-dark w-full h-full p-4"
+          class="rounded-tl-2xl bg-gray-light dark:bg-gray-dark w-full h-dvh p-4"
         >
           <slot />
         </div>
