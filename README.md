@@ -1,46 +1,75 @@
-<div align="center">
-  
-  # GeoRisk
-  &nbsp;
-    <img src="./assets/svg/ico.svg" style="width: 250px; height: auto; margin-bottom: 50px;"> 
-    
-    
-![Nuxtjs](https://img.shields.io/badge/Nuxt-002E3B?style=for-the-badge&logo=nuxtdotjs&logoColor=#00DC82)
-![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+# Nuxt 3 Minimal Starter
 
-</div>
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## About the Project
+## Setup
 
-Georisk is a webapp based on [French Georisque Government API](https://api.gouv.fr/les-api/api-georisques) to display risks for a selected location in France. The mission is to democratize risk analysis . The objective is to create a user-friendly and inclusive platform, allowing everyone to visualize and stay informed about constant risk evoltion in area.
+Make sure to install the dependencies:
 
-## Risks Analysed
+```bash
+# npm
+npm install
 
-All of risk's supported are presents in this [file](RISKS.md).
+# pnpm
+pnpm install
 
-## Roadmap 🎯
+# yarn
+yarn install
 
-- ✅ Parallax Background
-- ✅ API Requesting
-  - ✅ API Localisation
-  - ✅ API Georisque
-  - ✅ APIs convergence in own nuxt integrated API
-- ⏳ API Interpretation
-  - ✅ API Risk display
-  - ✅ API Risk history
-- ✅ Responsive Design
+# bun
+bun install
+```
 
-## How to Contribute 🤝
+## Development Server
 
-We believe in the power of collaboration. If you share our vision and want to contribute to making risk analysis acessible to everyone.
+Start the development server on `http://localhost:3000`:
 
-Join us in this crucial mission !
+```bash
+# npm
+npm run dev
 
-## Support the Project ⭐
+# pnpm
+pnpm run dev
 
-If you find this project useful or interesting, we encourage you to give it a ⭐️ on GitHub. It only takes a second but can greatly help increase the project's visibility.
+# yarn
+yarn dev
 
-If you're particularly excited about our mission to make first aid accessible to everyone, consider contributing further by [**becoming a contributor**] or by sharing the project with your colleagues and friends.
+# bun
+bun run dev
+```
 
-Thank you very much for your support! 🌟
+## Production
+
+Build the application for production:
+
+```bash
+# npm
+npm run build
+
+# pnpm
+pnpm run build
+
+# yarn
+yarn build
+
+# bun
+bun run build
+```
+
+Locally preview production build:
+
+```bash
+# npm
+npm run preview
+
+# pnpm
+pnpm run preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
