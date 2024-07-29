@@ -100,7 +100,9 @@ export default {
     <h1 class="text-2xl font-semibold pb-6 text-red-500">
       Service sécurité incendie de Montréal (SIM)
     </h1>
-    <div class="rounded-xl flex flex-row items-center bg-white mb-6 p-1">
+    <div
+      class="rounded-xl flex flex-row items-center bg-white mb-6 p-1 dark:bg-[#1e1e1e]"
+    >
       <UPopover>
         <UButton
           icon="i-heroicons-document-magnifying-glass-20-solid"
@@ -176,33 +178,40 @@ export default {
     </div>
     <div
       v-if="filteredResponse && filteredResponse.length"
-      class="rounded-xl overflow-scroll h-[75vh]"
+      class="rounded-xl overflow-scroll h-[75vh] border-2 dark:border-[#1e1e1e]"
     >
-      <div class="flex flex-row items-center w-full gap-4 p-2 bg-white">
+      <div
+        class="flex flex-row items-center w-full gap-4 p-2 bg-white dark:bg-[#1e1e1e]"
+      >
         <UIcon
           name="i-heroicons-phone-arrow-down-left-16-solid"
           class="w-5 h-5"
           color="grey"
         />
-        <p class="font-medium text-xl line-h-0">Dernières interventions</p>
+        <p class="font-medium text-xl line-h-0 dark:text-white">
+          Dernières interventions
+        </p>
       </div>
       <div
         v-for="(item, index) in filteredResponse"
         :key="index"
         class="flex flex-row p-2 gap-4"
-        :class="{ 'bg-gray-100': index % 2 === 0, 'bg-white': index % 2 !== 0 }"
+        :class="{
+          'bg-gray-100 dark:bg-[#101010]': index % 2 === 0,
+          'bg-white dark:bg-[#111111]': index % 2 !== 0,
+        }"
       >
         <div class="flex flex-col items-center">
-          <p class="font-bold text-xl">
+          <p class="font-bold text-xl dark:text-white">
             {{ formatTime(item.CREATION_DATE_TIME) }}
           </p>
-          <p>
+          <p class="dark:text-white">
             {{ formatDate(item.CREATION_DATE_TIME) }}
           </p>
         </div>
         <div class="flex flex-col">
           <div class="flex flex-row items-center gap-4">
-            <p class="font-bold text-lg text-[#201c4f]">
+            <p class="font-bold text-lg text-[#201c4f] dark:text-[#ef4444]">
               {{ item.INCIDENT_TYPE_DESC }}
             </p>
             <Chip :label="`#${item.INCIDENT_NBR}`" />
@@ -215,7 +224,7 @@ export default {
             />
           </div>
           <a
-            class="w-fit"
+            class="w-fit dark:text-white"
             :href="`https://www.google.com/maps?q=${item.LATITUDE},${item.LONGITUDE}`"
             target="_blank"
             >{{ item.NOM_VILLE
