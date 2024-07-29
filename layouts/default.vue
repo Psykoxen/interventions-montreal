@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="w-full flex flex-col h-dvh">
+    <div class="w-full flex flex-col h-screen">
       <div class="w-full flex items-center flex-row justify-between">
         <div class="flex flex-row gap-2 p-3 items-center">
           <img
@@ -11,7 +11,7 @@
           />
           <p>Interventions Montreal</p>
         </div>
-        <UButton
+        <!-- <UButton
           :icon="
             isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'
           "
@@ -20,11 +20,11 @@
           variant="ghost"
           aria-label="Theme"
           @click="isDark = !isDark"
-        />
+        /> -->
       </div>
-      <div class="flex flex-row h-dvh">
+      <div class="flex flex-row h-full">
         <div class="flex flex-col items-center w-14 gap-1">
-          <UButton
+          <!-- <UButton
             icon="i-heroicons-globe-asia-australia-solid"
             size="lg"
             color="grey"
@@ -32,7 +32,7 @@
             :trailing="false"
             square
             to="/"
-          />
+          /> -->
           <UButton
             icon="i-heroicons-fire-16-solid"
             size="lg"
@@ -40,9 +40,9 @@
             variant="ghost"
             :trailing="false"
             square
-            to="/sim"
+            to="/"
           />
-          <UButton
+          <!-- <UButton
             icon="i-heroicons-hand-raised-solid"
             size="lg"
             color="indigo"
@@ -50,10 +50,10 @@
             :trailing="false"
             square
             to="/spvm"
-          />
+          /> -->
         </div>
         <div
-          class="rounded-tl-2xl bg-gray-light dark:bg-gray-dark w-full h-dvh p-4"
+          class="rounded-tl-2xl bg-gray-light dark:bg-gray-dark w-full h-full p-4"
         >
           <slot />
         </div>

@@ -1,162 +1,231 @@
 <script>
-const toast = useToast();
+import Chip from "~/components/chip.vue";
+import moment from "moment";
+
 export default {
+  components: {
+    Chip,
+  },
   data() {
     return {
       response: null,
-      flooding: 0,
-      groundMovements: 0,
-      earthquakes: 0,
-      avalanches: 0,
-      volcanicEruptions: 0,
-      forestFires: 0,
-      weatherTroubles: 0,
-      radon: 0,
-      industrialRisks: 0,
-      nuclearRisks: 0,
-      damBreaks: 0,
-      dangerTransport: 0,
-      warEngines: 0,
-      miningRisks: 0,
-      isOpen: false,
+      filteredResponse: null,
+      filters: {
+        typologie: [],
+        localisation: [],
+        caserne: [],
+      },
+      selectedFilters: {
+        typologie: [],
+        localisation: [],
+        caserne: [],
+      },
     };
   },
+  computed: {
+    typologieOptions() {
+      const options = new Set();
+      if (this.response) {
+        this.response.forEach((item) => options.add(item.INCIDENT_TYPE_DESC));
+      }
+      return Array.from(options);
+    },
+    localisationOptions() {
+      const options = new Set();
+      if (this.response) {
+        this.response.forEach((item) => options.add(item.NOM_ARROND));
+      }
+      return Array.from(options);
+    },
+    caserneOptions() {
+      const options = new Set();
+      if (this.response) {
+        this.response.forEach((item) => options.add(item.DIVISION));
+      }
+      return Array.from(options);
+    },
+  },
   methods: {
-    detectEnterKey(event) {
-      if (event.key === "Enter") {
-        this.requestDanger();
-      }
-    },
-    async requestDanger() {
-      if (document.getElementById("adress").value === "") {
-        toast.add({
-          title: "Recherche Invalide",
-          description: "Veuillez entrer une adresse valide",
-          icon: "i-heroicons-x-circle",
-          color: "red",
+    async requestLastCalls() {
+      try {
+        const response = await $fetch("/api/sim", {
+          method: "get",
         });
-        return;
-      } else {
-        this.setDefaultValue();
-        try {
-          const response = await $fetch("/api/risk", {
-            method: "post",
-            body: { adress: document.getElementById("adress").value },
-          });
-          this.$data.response = response;
-          for (let i = 0; i < response.risques.length; i++) {
-            switch (parseInt(response.risques[i].num_risque)) {
-              case 140:
-              case 180:
-              case 183:
-              case 130:
-              case 286:
-                this.$data.flooding++;
-                break;
-              case 134:
-              case 135:
-              case 143:
-              case 147:
-              case 153:
-              case 157:
-                this.$data.groundMovements++;
-                break;
-              case 158:
-                this.$data.earthquakes++;
-                break;
-              case 159:
-                this.$data.avalanches++;
-                break;
-              case 160:
-                this.$data.volcanicEruptions++;
-                break;
-              case 166:
-                this.$data.forestFires++;
-                break;
-              case 167:
-              case 168:
-              case 169:
-              case 175:
-              case 176:
-              case 177:
-                this.$data.weatherTroubles++;
-                break;
-              case 229:
-                this.$data.radon++;
-                break;
-              case 215:
-              case 236:
-              case 237:
-              case 238:
-                this.$data.industrialRisks++;
-                break;
-              case 230:
-                this.$data.nuclearRisks++;
-                break;
-              case 213:
-                this.$data.damBreaks++;
-                break;
-              case 226:
-                this.$data.dangerTransport++;
-                break;
-              case 231:
-                this.$data.warEngines++;
-                break;
-              case 256:
-              case 254:
-              case 293:
-              case 288:
-              case 259:
-                this.$data.miningRisks++;
-                break;
-            }
-          }
-        } catch (error) {
-          this.setDefaultValue();
-          toast.add({
-            title: "Erreur",
-            description: "Oups, une erreur est survenue",
-            icon: "i-heroicons-question-mark-circle",
-            color: "amber",
-          });
-        }
+        this.response = response;
+        this.filteredResponse = response; // Initially, all data is shown
+      } catch (error) {
+        console.error(error);
       }
     },
-    setDefaultValue() {
-      this.$data.response = null;
-      this.$data.flooding = 0;
-      this.$data.groundMovements = 0;
-      this.$data.earthquakes = 0;
-      this.$data.avalanches = 0;
-      this.$data.volcanicEruptions = 0;
-      this.$data.forestFires = 0;
-      this.$data.weatherTroubles = 0;
-      this.$data.radon = 0;
-      this.$data.industrialRisks = 0;
-      this.$data.nuclearRisks = 0;
-      this.$data.damBreaks = 0;
-      this.$data.dangerTransport = 0;
-      this.$data.warEngines = 0;
-      this.$data.miningRisks = 0;
+
+    formatDate(dateTime) {
+      return moment(dateTime).format("DD/MM/YY");
+    },
+    formatTime(dateTime) {
+      return moment(dateTime).format("HH:mm");
+    },
+
+    applyFilters() {
+      this.filteredResponse = this.response.filter((item) => {
+        return (
+          (this.selectedFilters.typologie.length === 0 ||
+            this.selectedFilters.typologie.includes(item.INCIDENT_TYPE_DESC)) &&
+          (this.selectedFilters.localisation.length === 0 ||
+            this.selectedFilters.localisation.includes(item.NOM_ARROND)) &&
+          (this.selectedFilters.caserne.length === 0 ||
+            this.selectedFilters.caserne.includes(item.DIVISION))
+        );
+      });
+    },
+
+    toggleFilter(filterType, value) {
+      const filterArray = this.selectedFilters[filterType];
+      const index = filterArray.indexOf(value);
+      if (index > -1) {
+        filterArray.splice(index, 1);
+      } else {
+        filterArray.push(value);
+      }
+      this.applyFilters();
     },
   },
   mounted() {
-    window.addEventListener("scroll", function () {
-      let value = window.scrollY;
-
-      title.style.marginTop = value * 1.8 + "px";
-      layer6.style.top = value * 1.5 + "px";
-      layer5.style.top = value * 1.3 + "px";
-      layer4.style.top = value * 1.0 + "px";
-      layer3.style.top = value * 0.8 + "px";
-      layer2.style.top = value * 0.6 + "px";
-    });
+    this.requestLastCalls();
   },
 };
 </script>
 
 <template>
-  <h1 class="text-4xl font-bold">ACCUEIL</h1>
+  <div>
+    <h1 class="text-2xl font-semibold pb-6 text-red-500">
+      Service sécurité incendie de Montréal (SIM)
+    </h1>
+    <div class="rounded-xl flex flex-row items-center bg-white mb-6 p-1">
+      <UPopover>
+        <UButton
+          icon="i-heroicons-document-magnifying-glass-20-solid"
+          size="lg"
+          label="Typologie"
+          color="yellow"
+          variant="ghost"
+        />
+        <template #panel>
+          <div class="p-4">
+            <div v-for="option in typologieOptions" :key="option">
+              <label>
+                <input
+                  type="checkbox"
+                  :value="option"
+                  v-model="selectedFilters.typologie"
+                  @change="applyFilters"
+                />
+                {{ option }}
+              </label>
+            </div>
+          </div>
+        </template>
+      </UPopover>
+      <UPopover>
+        <UButton
+          icon="i-heroicons-map-pin-16-solid"
+          size="lg"
+          label="Localisation"
+          color="green"
+          variant="ghost"
+        />
+        <template #panel>
+          <div class="p-4">
+            <div v-for="option in localisationOptions" :key="option">
+              <label>
+                <input
+                  type="checkbox"
+                  :value="option"
+                  v-model="selectedFilters.localisation"
+                  @change="applyFilters"
+                />
+                {{ option }}
+              </label>
+            </div>
+          </div>
+        </template>
+      </UPopover>
+      <UPopover>
+        <UButton
+          icon="i-heroicons-building-office-20-solid"
+          size="lg"
+          label="Caserne"
+          color="red"
+          variant="ghost"
+        />
+        <template #panel>
+          <div class="p-4">
+            <div v-for="option in caserneOptions" :key="option">
+              <label>
+                <input
+                  type="checkbox"
+                  :value="option"
+                  v-model="selectedFilters.caserne"
+                  @change="applyFilters"
+                />
+                Caserne {{ option }}
+              </label>
+            </div>
+          </div>
+        </template>
+      </UPopover>
+    </div>
+    <div
+      v-if="filteredResponse && filteredResponse.length"
+      class="rounded-xl overflow-scroll h-[75vh]"
+    >
+      <div class="flex flex-row items-center w-full gap-4 p-2 bg-white">
+        <UIcon
+          name="i-heroicons-phone-arrow-down-left-16-solid"
+          class="w-5 h-5"
+          color="grey"
+        />
+        <p class="font-medium text-xl line-h-0">Dernières interventions</p>
+      </div>
+      <div
+        v-for="(item, index) in filteredResponse"
+        :key="index"
+        class="flex flex-row p-2 gap-4"
+        :class="{ 'bg-gray-100': index % 2 === 0, 'bg-white': index % 2 !== 0 }"
+      >
+        <div class="flex flex-col items-center">
+          <p class="font-bold text-xl">
+            {{ formatTime(item.CREATION_DATE_TIME) }}
+          </p>
+          <p>
+            {{ formatDate(item.CREATION_DATE_TIME) }}
+          </p>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex flex-row items-center gap-4">
+            <p class="font-bold text-lg text-[#201c4f]">
+              {{ item.INCIDENT_TYPE_DESC }}
+            </p>
+            <Chip :label="`#${item.INCIDENT_NBR}`" />
+            <Chip :label="`Caserne #${item.DIVISION}`" color="red" />
+            <Chip
+              :label="`${item.NOMBRE_UNITES} unité${
+                item.NOMBRE_UNITES > 1 ? 's' : ''
+              }`"
+              color="orange"
+            />
+          </div>
+          <a
+            class="w-fit"
+            :href="`https://www.google.com/maps?q=${item.LATITUDE},${item.LONGITUDE}`"
+            target="_blank"
+            >{{ item.NOM_VILLE
+            }}{{
+              item.NOM_ARROND != "Indéterminé" ? ", " + item.NOM_ARROND : ""
+            }}</a
+          >
+        </div>
+      </div>
+    </div>
+    <div v-else>Loading...</div>
+  </div>
 </template>
-
-<style></style>

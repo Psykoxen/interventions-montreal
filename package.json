@@ -23,7 +23,9 @@
   },
   "dependencies": {
     "@nuxt/content": "^2.9.0",
+    "@nuxt/fonts": "^0.7.1",
     "@nuxt/ui": "^2.12.0",
-    "axios": "^1.6.2"
+    "axios": "^1.6.2",
+    "moment": "^2.30.1"
   }
 }
