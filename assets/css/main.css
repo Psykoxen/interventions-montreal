@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* html {
+  scroll-behavior: smooth;
+  background-color: #f9faff;
+  font-family: "Poppins", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f9faff;
+  height: 100vh;
+  overflow-x: hidden;
+} */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  color: #717e94;
+}
+
+* {
+  font-family: Montserrat, serif;
+}
