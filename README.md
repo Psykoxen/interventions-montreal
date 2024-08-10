@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/svg/montreal.svg" alt="Interventions Montréal" width="200"/>
+  <img src="public/favicon.ico" alt="Interventions Montréal" width="200"/>
   </div>
   
 # Interventions Montréal / 911 Montreal
@@ -13,4 +13,8 @@ Intervention Montreal is a web application that allows users to view last interv
 
 ### SPVM (Service de police de la Ville de Montréal)
 
-Coming soon...
+- [x] View last interventions
+
+### Hydro-Québec (Commission hydroélectrique du Québec)
+
+- [x] View last downed power lines
