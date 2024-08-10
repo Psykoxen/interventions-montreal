@@ -146,12 +146,12 @@ export default {
         </div>
         <div class="flex flex-col">
           <div class="flex flex-row items-center gap-4">
-            <p class="font-bold text-lg text-[#201c4f] dark:text-[#ef4444]">
-              Panne en cours
+            <p class="font-bold text-lg text-[#201c4f] dark:text-[#eab308]">
+              Panne
               {{
                 item[2]
-                  ? `(fin estimée ${formatDateTime(item[1], item[2])})`
-                  : ""
+                  ? `en cours (fin estimée ${formatDateTime(item[1], item[2])})`
+                  : "terminée"
               }}
             </p>
             <Chip
