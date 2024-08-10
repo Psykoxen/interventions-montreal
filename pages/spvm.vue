@@ -12,13 +12,11 @@ export default {
       filteredResponse: null,
       filters: {
         typologie: [],
-        localisation: [],
-        caserne: [],
+        pdq: [],
       },
       selectedFilters: {
         typologie: [],
-        localisation: [],
-        caserne: [],
+        pdq: [],
       },
     };
   },
@@ -26,32 +24,29 @@ export default {
     typologieOptions() {
       const options = new Set();
       if (this.response) {
-        this.response.forEach((item) => options.add(item.INCIDENT_TYPE_DESC));
+        this.response.forEach((item) => options.add(item.CATEGORIE));
       }
       return Array.from(options).sort();
     },
-    localisationOptions() {
+    pdqOptions() {
       const options = new Set();
       if (this.response) {
-        this.response.forEach((item) => options.add(item.NOM_ARROND));
+        this.response.forEach((item) => options.add(item.PDQ));
       }
-      return Array.from(options).sort();
-    },
-    caserneOptions() {
-      const options = new Set();
-      if (this.response) {
-        this.response.forEach((item) => options.add(item.DIVISION));
-      }
-      return Array.from(options).sort();
+      return Array.from(options)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(String);
     },
   },
   methods: {
     async requestLastCalls() {
       try {
-        const response = await $fetch("/api/sim", {
+        const response = await $fetch("/api/spvm", {
           method: "get",
         });
         this.response = response;
+        console.log(response);
         this.filteredResponse = response; // Initially, all data is shown
       } catch (error) {
         console.error(error);
@@ -69,11 +64,9 @@ export default {
       this.filteredResponse = this.response.filter((item) => {
         return (
           (this.selectedFilters.typologie.length === 0 ||
-            this.selectedFilters.typologie.includes(item.INCIDENT_TYPE_DESC)) &&
-          (this.selectedFilters.localisation.length === 0 ||
-            this.selectedFilters.localisation.includes(item.NOM_ARROND)) &&
-          (this.selectedFilters.caserne.length === 0 ||
-            this.selectedFilters.caserne.includes(item.DIVISION))
+            this.selectedFilters.typologie.includes(item.CATEGORIE)) &&
+          (this.selectedFilters.pdq.length === 0 ||
+            this.selectedFilters.pdq.includes(item.PDQ))
         );
       });
     },
@@ -97,8 +90,8 @@ export default {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold pb-6 text-red-500">
-      Service sécurité incendie de Montréal (SIM)
+    <h1 class="text-2xl font-semibold pb-6 text-indigo-500">
+      Service de police de la Ville de Montréal (SPVM)
     </h1>
     <div
       class="rounded-xl flex flex-row items-center bg-white mb-6 p-1 dark:bg-[#1e1e1e]"
@@ -129,47 +122,23 @@ export default {
       </UPopover>
       <UPopover>
         <UButton
-          icon="i-heroicons-map-pin-16-solid"
-          size="lg"
-          label="Localisation"
-          color="green"
-          variant="ghost"
-        />
-        <template #panel>
-          <div class="p-4">
-            <div v-for="option in localisationOptions" :key="option">
-              <label>
-                <input
-                  type="checkbox"
-                  :value="option"
-                  v-model="selectedFilters.localisation"
-                  @change="applyFilters"
-                />
-                {{ option }}
-              </label>
-            </div>
-          </div>
-        </template>
-      </UPopover>
-      <UPopover>
-        <UButton
           icon="i-heroicons-building-office-20-solid"
           size="lg"
-          label="Caserne"
-          color="red"
+          label="Poste de Quartier"
+          color="indigo"
           variant="ghost"
         />
         <template #panel>
           <div class="p-4">
-            <div v-for="option in caserneOptions" :key="option">
+            <div v-for="option in pdqOptions" :key="option">
               <label>
                 <input
                   type="checkbox"
                   :value="option"
-                  v-model="selectedFilters.caserne"
+                  v-model="selectedFilters.pdq"
                   @change="applyFilters"
                 />
-                Caserne {{ option }}
+                Poste de Quartier {{ option }}
               </label>
             </div>
           </div>
@@ -203,35 +172,34 @@ export default {
       >
         <div class="flex flex-col items-center">
           <p class="font-bold text-xl dark:text-white">
-            {{ formatTime(item.CREATION_DATE_TIME) }}
+            {{ item.QUART[0].toUpperCase() + item.QUART.slice(1) }}
           </p>
           <p class="dark:text-white">
-            {{ formatDate(item.CREATION_DATE_TIME) }}
+            {{ formatDate(item.DATE) }}
           </p>
         </div>
         <div class="flex flex-col">
           <div class="flex flex-row items-center gap-4">
-            <p class="font-bold text-lg text-[#201c4f] dark:text-[#ef4444]">
-              {{ item.INCIDENT_TYPE_DESC }}
+            <p class="font-bold text-lg text-[#201c4f] dark:text-[#4455ef]">
+              {{ item.CATEGORIE }}
             </p>
-            <Chip :label="`#${item.INCIDENT_NBR}`" />
-            <Chip :label="`Caserne #${item.DIVISION}`" color="red" />
-            <Chip
-              :label="`${item.NOMBRE_UNITES} unité${
-                item.NOMBRE_UNITES > 1 ? 's' : ''
-              }`"
-              color="orange"
-            />
+            <Chip :label="`#${item._id}`" />
+            <Chip :label="`Poste de Quartier #${item.PDQ}`" color="blue" />
           </div>
           <a
+            v-if="item.LATITUDE && item.LONGITUDE"
             class="w-fit dark:text-white"
             :href="`https://www.google.com/maps?q=${item.LATITUDE},${item.LONGITUDE}`"
             target="_blank"
-            >{{ item.NOM_VILLE
-            }}{{
-              item.NOM_ARROND != "Indéterminé" ? ", " + item.NOM_ARROND : ""
-            }}</a
           >
+            {{ item.LATITUDE }}, {{ item.LONGITUDE }}
+          </a>
+          <p
+            v-if="!item.LATITUDE && !item.LONGITUDE"
+            class="w-fit dark:text-white"
+          >
+            Non communiqué
+          </p>
         </div>
       </div>
     </div>
