@@ -42,7 +42,7 @@
             square
             to="/"
           />
-          <!-- <UButton
+          <UButton
             icon="i-heroicons-hand-raised-solid"
             size="lg"
             color="indigo"
@@ -50,7 +50,7 @@
             :trailing="false"
             square
             to="/spvm"
-          /> -->
+          />
         </div>
         <div
           class="rounded-tl-2xl bg-gray-light dark:bg-[#121212] w-full h-full p-4"
