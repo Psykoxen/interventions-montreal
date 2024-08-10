@@ -51,6 +51,15 @@
             square
             to="/spvm"
           />
+          <UButton
+            icon="i-heroicons-bolt-slash"
+            size="lg"
+            color="yellow"
+            variant="ghost"
+            :trailing="false"
+            square
+            to="/hydro"
+          />
         </div>
         <div
           class="rounded-tl-2xl bg-gray-light dark:bg-[#121212] w-full h-full p-4"
